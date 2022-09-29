@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:tv_movie/theme.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({Key? key}) : super(key: key);
@@ -8,7 +9,7 @@ class SideBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Color.fromARGB(255, 24, 24, 24),
+      backgroundColor: Colorr.darkColor,
       width: 60,
       child: Container(
         margin: EdgeInsets.only(top: 230),
@@ -17,7 +18,7 @@ class SideBar extends StatelessWidget {
             InkWell(
               onTap: (){},
               child: Card(
-                color: Color.fromARGB(255, 24, 24, 24),
+                color: Colorr.darkColor,
                 child: Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.all(10),
@@ -32,7 +33,7 @@ class SideBar extends StatelessWidget {
             InkWell(
               onTap: (){},
               child: Card(
-                color: Color.fromARGB(255, 24, 24, 24),
+                color: Colorr.darkColor,
                 child: Container(
                   alignment: Alignment.center,
                   width: 190,
@@ -48,7 +49,7 @@ class SideBar extends StatelessWidget {
             InkWell(
               onTap: (){},
               child: Card(
-                color: Color.fromARGB(255, 24, 24, 24),
+                color: Colorr.darkColor,
                 child: Container(
                   alignment: Alignment.center,
                   width: 190,
