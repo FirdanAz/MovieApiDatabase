@@ -3,6 +3,7 @@ import 'package:tv_movie/AccountPage.dart';
 import 'package:tv_movie/ListMoviePopuler.dart';
 import 'package:tv_movie/AccountPage.dart';
 import 'package:tv_movie/SeaAllPage.dart';
+import 'package:tv_movie/list_database.dart';
 import 'package:tv_movie/theme.dart';
 
 void main() => runApp(const MyApp());
@@ -36,7 +37,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static const List<Widget> _widgetOptions = <Widget>[
     ListMoviePopuler(),
     SeaAllList(),
-    AccountPage()
+    ListMoviePage()
   ];
 
   void _onItemTapped(int index) {
@@ -62,15 +63,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             label: 'Movie',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_outlined),
-            label: 'Account',
+            icon: Icon(Icons.star),
+            label: 'Favorite',
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.white70,
+        selectedItemColor: Colors.white,
         onTap: _onItemTapped,
         backgroundColor: Colorr.darkColor,
-        unselectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white54,
       ),
     );
   }

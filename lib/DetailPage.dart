@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:tv_movie/Database/database_model.dart';
+import 'package:tv_movie/Database/movie_database.dart';
 import 'package:tv_movie/MoviePopulerModel.dart';
 import 'package:tv_movie/movie_detail_api.dart';
 import 'package:tv_movie/movie_video_api.dart';
@@ -23,7 +25,6 @@ class _DetailPageState extends State<DetailPage> {
   MovieDetail? movieDetail;
   MoviePopuler? moviePopuler;
   bool isloaded = false;
-
 
   Future<void> AddListDetail() async {
     setState(() {
@@ -120,6 +121,7 @@ class _DetailPageState extends State<DetailPage> {
               SliverToBoxAdapter(
                 child: Container(
                   color: Colorr.darkColor,
+                  margin: EdgeInsets.only(bottom: 200),
                   child: Container(
                     padding: EdgeInsets.all(10),
                     child: Column(
@@ -133,7 +135,6 @@ class _DetailPageState extends State<DetailPage> {
                           textAlign: TextAlign.justify,
                         ),
                         Container(
-                          width: double.maxFinite,
                           margin: EdgeInsets.only(top: 6),
                           decoration: BoxDecoration(
                               border: Border.symmetric(horizontal: BorderSide(color: Colors.grey, width: 0.1))
@@ -141,16 +142,43 @@ class _DetailPageState extends State<DetailPage> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Name  : '+movieDetail!.title!.toString(), style: TextStyle(color: Colors.white70),),
-                                    Text('Release Date  : '+movieDetail!.releaseDate!.toString(), style: TextStyle(color: Colors.white70),),
-                                    Container(width: 350, child: Text('Status  : '+movieDetail!.status!.toString(),overflow: TextOverflow.clip, style: TextStyle(color: Colors.white70),)),
-                                    Text('Popularity : '+movieDetail!.popularity.toString(), style: TextStyle(color: Colors.white70),)
-                                  ],
+                                Container(
+                                  width: 320,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Name  : '+movieDetail!.title!.toString(), style: TextStyle(color: Colors.white70),),
+                                      Text('Release Date  : '+movieDetail!.releaseDate!.toString(), style: TextStyle(color: Colors.white70),),
+                                      Container(width: 350, child: Text('Status  : '+movieDetail!.status!.toString(),overflow: TextOverflow.clip, style: TextStyle(color: Colors.white70),)),
+                                      Text('Popularity : '+movieDetail!.popularity.toString(), style: TextStyle(color: Colors.white70),)
+                                    ],
+                                  ),
                                 ),
+                                InkWell(
+                                  child: Icon(Icons.star,color: Colors.grey, size: 25,),
+                                  onTap: () async {
+                                    String? namaa = movieDetail!.id.toString();
+                                    var karyawan;
+                                    karyawan = MovieModel(
+                                        imagePath: "https://www.themoviedb.org/t/p/w220_and_h330_face/"+movieDetail!.posterPath.toString(),
+                                        name: movieDetail!.originalTitle.toString(),
+                                        idMovie: movieDetail!.id.toString());
+                                    await MovieDatabase.instance.create(karyawan);
+                                    Navigator.pop(context, "result");
+                                      final snackBar = SnackBar(
+                                        content: const Text('Movie Disimpan!!'),
+                                        backgroundColor: (Colors.black),
+                                        action: SnackBarAction(
+                                          label: 'Oke',
+                                          onPressed: () {
+                                          },
+                                        ),
+                                      );
+                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                  },
+                                )
                               ],
                             ),
                           ),
@@ -275,7 +303,6 @@ class _DetailPageState extends State<DetailPage> {
                       ],
                     ),
                   ),
-                  margin: EdgeInsets.only(bottom: 200),
                 ),
               )
             ]
