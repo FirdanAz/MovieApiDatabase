@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tv_movie/Database/movie_database.dart';
 import 'package:tv_movie/DetailPage.dart';
-import 'package:tv_movie/add_list.dart';
 import 'package:tv_movie/theme.dart';
 
 import 'Database/database_model.dart';
