@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:tv_movie/Database/database_model.dart';
 import 'package:tv_movie/Database/movie_database.dart';
 import 'package:tv_movie/MoviePopulerModel.dart';
@@ -11,6 +12,8 @@ import 'package:tv_movie/SeaAllPage.dart';
 import 'package:tv_movie/theme.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
+import 'Database/database_model.dart';
+import 'package:path/path.dart';
 
 class DetailPage extends StatefulWidget {
   DetailPage({Key? key, required this.id}) : super(key: key);
@@ -24,7 +27,12 @@ class _DetailPageState extends State<DetailPage> {
   MovieVideoApi? movieVideoApi;
   MovieDetail? movieDetail;
   MoviePopuler? moviePopuler;
+  MovieModel? movieModel;
   bool isloaded = false;
+  List<MovieModel> dataListMovie = [];
+
+  var database;
+  bool isFavorit = false;
 
   Future<void> AddListDetail() async {
     setState(() {
@@ -47,9 +55,18 @@ class _DetailPageState extends State<DetailPage> {
     );
     moviePopuler = MoviePopuler.fromJson(json.decode(res3.body.toString()));
 
+    dataListMovie = await MovieDatabase.instance.readAll();
+
     setState(() {
       isloaded = true;
     });
+    for (var i =0;i<dataListMovie.length; i++) {
+      print(dataListMovie[i].name);
+      print(movieDetail!.title);
+      if (dataListMovie[i].name == movieDetail!.title) {
+        isFavorit = true;
+      }
+    }
   }
 
 
@@ -69,6 +86,34 @@ class _DetailPageState extends State<DetailPage> {
             physics: const BouncingScrollPhysics(),
             slivers: [
               SliverAppBar(
+                actions: [
+                    IconButton(onPressed: () async {
+                      setState(() {
+                        isFavorit = !isFavorit;
+                      });
+                      if(isFavorit == true){
+                        var karyawan;
+                        karyawan = MovieModel(
+                            imagePath: "https://www.themoviedb.org/t/p/w220_and_h330_face/"+movieDetail!.posterPath.toString(),
+                            name: movieDetail!.originalTitle.toString(),
+                            idMovie: movieDetail!.id.toString());
+                        await MovieDatabase.instance.create(karyawan);
+                        Navigator.pop(context, "result");
+                        final snackBar = SnackBar(
+                          content: const Text('Movie Disimpan!!'),
+                          backgroundColor: (Colors.black),
+                          action: SnackBarAction(
+                            label: 'Oke',
+                            onPressed: () {
+                            },
+                          ),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }else{
+                        await MovieDatabase.instance.delete(movieDetail!.title.toString());
+                      }
+                    }, icon: isFavorit ? Icon(Icons.favorite, color: Colors.white,) : Icon(Icons.favorite_border, color: Colors.white,)),
+                ],
                 bottom: PreferredSize(
                   preferredSize: Size.fromHeight(20),
                   child: ClipRRect(

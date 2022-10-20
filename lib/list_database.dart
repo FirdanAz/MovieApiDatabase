@@ -35,7 +35,7 @@ class _ListMoviePageState extends State<ListMoviePage> {
     read();
   }
 
-  showDeleteDialog(BuildContext context, int? id) {
+  showDeleteDialog(BuildContext context, String? nama) {
     // set up the button
     Widget cancelButton = TextButton(
       child: Text("Tidak"),
@@ -49,7 +49,7 @@ class _ListMoviePageState extends State<ListMoviePage> {
         setState(() {
           isLoading = true;
         });
-        await MovieDatabase.instance.delete(id);
+        await MovieDatabase.instance.delete(nama);
         read();
         setState(() {
           isLoading = false;
@@ -103,37 +103,34 @@ class _ListMoviePageState extends State<ListMoviePage> {
               decoration: BoxDecoration(
                   border: Border.symmetric(horizontal: BorderSide(color: Colors.grey, width: 0.1))
               ),
-              child: Card(
-                color: Colorr.darkColor,
-                child: ListTile(
-                  onTap: () async{
-                    int id = int.parse(item.idMovie);
-                    print(id);
-                    final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => DetailPage(id: id)));
-                    Future.delayed(Duration(seconds: 2));
-                    read();
-                  },
-                  leading: Container(
-                    width: 80,
-                    height: 80,
-                    child: Image.network(
-                      (item.imagePath),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  title: Text(item.name, style: TextStyle(fontSize: 16, color: Colors.white),),
-                  subtitle: Text('ID : ${item.idMovie}', style: TextStyle(color: Colors.white70),),
-                  trailing: IconButton(
-                    onPressed: () {
-                      showDeleteDialog(context, item.id);
+              child: InkWell(
+                onLongPress: (){
+                  showDeleteDialog(context, item.name.toString());
+                },
+                child: Card(
+                  color: Colorr.darkColor,
+                  child: ListTile(
+                    onTap: () async{
+                      int id = int.parse(item.idMovie);
+                      print(id);
+                      final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => DetailPage(id: id)));
+                      Future.delayed(Duration(seconds: 2));
+                      read();
                     },
-                    icon: Icon(
-                      Icons.delete,
-                      color: Colors.red,
+                    leading: Container(
+                      width: 80,
+                      height: 80,
+                      child: Image.network(
+                        (item.imagePath),
+                        fit: BoxFit.cover,
+                      ),
                     ),
+                    title: Text(item.name, style: TextStyle(fontSize: 16, color: Colors.white),),
+                    subtitle: Text('ID : ${item.idMovie}', style: TextStyle(color: Colors.white70),),
+
                   ),
                 ),
               ),

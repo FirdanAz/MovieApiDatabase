@@ -47,20 +47,36 @@ class MovieDatabase{
     return news.copy(id: id);
   }
 
-  Future<MovieModel> read(int? id) async{
+  // Future<MovieModel> read(int? id) async{
+  //   final db = await instance.database;
+  //
+  //   final maps = await db.query(
+  //     tableMovie,
+  //     columns: MovieFields.values,
+  //     where: '${MovieFields.id} = ?',
+  //     whereArgs: [id],
+  //   );
+  //
+  //   if (maps.isNotEmpty){
+  //     return MovieModel.fromJson(maps.first);
+  //   } else {
+  //     throw Exception('ID $id not found');
+  //   }
+  // }
+  Future<MovieModel> read(String? title) async{
     final db = await instance.database;
 
     final maps = await db.query(
       tableMovie,
       columns: MovieFields.values,
-      where: '${MovieFields.id} = ?',
-      whereArgs: [id],
+      where: '${MovieFields.name} = ?',
+      whereArgs: [title],
     );
 
     if (maps.isNotEmpty){
       return MovieModel.fromJson(maps.first);
     } else {
-      throw Exception('ID $id not found');
+      throw Exception('NAME $title not found');
     }
   }
 
@@ -72,20 +88,20 @@ class MovieDatabase{
     return result.map((json) => MovieModel.fromJson(json)).toList();
   }
 
-  delete(int? id) async {
+  delete(String? title) async {
     final db = await instance.database;
     try {
       await db.delete(
         tableMovie,
-        where: '${MovieFields.id} = ?',
-        whereArgs: [id],
+        where: '${MovieFields.name} = ?',
+        whereArgs: [title],
       );
     } catch (e) {
       print(e);
     }
   }
 
-  update(MovieModel karyawanModel) async {
+  update(MovieModel movieModel) async {
     final db = await instance.database;
     try {
       db.rawUpdate('''
@@ -93,10 +109,10 @@ class MovieDatabase{
     SET ${MovieFields.name} = ?, ${MovieFields.idMovie} = ?, ${MovieFields.imagePath} = ?
     WHERE ${MovieFields.id} = ?
     ''', [
-        karyawanModel.name,
-        karyawanModel.idMovie,
-        karyawanModel.imagePath,
-        karyawanModel.id
+        movieModel.name,
+        movieModel.idMovie,
+        movieModel.imagePath,
+        movieModel.id
       ]);
     } catch (e) {
       print('error: ' + e.toString());
